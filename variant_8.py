@@ -8,4 +8,25 @@
 другого – 4 у.г.о. 
 Потрібно скласти математичну модель задачі, що дозволить обрахувати план випуску трансформаторів, 
 що забезпечить заводу максимальний прибуток.
+
+z = 3*x + 4*y
+z = -3*x - 4*y (use linprog)
+5x + 3y <= 3000
+3x + 2y <= 18000
+x >= 0
+y >= 0
+
 """
+from scipy.optimize import linprog
+
+c = [-3, -4]  # Coefficients of the objective function (negative for maximization)
+A = [[5, 3], [3, 2]]  # Coefficients of the inequality constraints
+b = [3000, 18000]  # Right-hand side values of the inequality constraints
+x_bounds = (0, None)  # Bounds for x
+y_bounds = (0, None)  # Bounds for y
+
+result = linprog(c, A_ub=A, b_ub=b, bounds=[x_bounds, y_bounds], method='highs')
+
+print("Оптимальна кількість трансформаторів 1-го типу (x):", result.x[0])
+print("Оптимальна кількість трансформаторів 2-го типу (y):", result.x[1])
+print("Максимальний прибуток:", -result.fun)
